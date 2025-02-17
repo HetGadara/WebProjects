@@ -1,14 +1,18 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TEInput, TERipple } from 'tw-elements-react';
+import { Grid, Card, CardContent, TextField, Button, Typography } from '@mui/material';
 
 const VerifyOTP = () => {
   const [otp, setOtp] = useState('');
   const navigate = useNavigate();
-  const storedUser = useMemo(() => JSON.parse(localStorage.getItem('user')) || {}, []);
 
   const handleVerify = () => {
-    if (parseInt(otp) === storedUser.otp) {
+    const users = JSON.parse(localStorage.getItem('users')) || {};
+
+    const userEmail = Object.keys(users).find((email) => users[email].otp);
+    const storedOTP = users[userEmail]?.otp;
+
+    if (parseInt(otp) === storedOTP) {
       alert('OTP Verified!');
       navigate('/login');
     } else {
@@ -17,28 +21,42 @@ const VerifyOTP = () => {
   };
 
   return (
-    <div className='flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-500'>
-      <div className='bg-white p-8 rounded-lg shadow-2xl w-full max-w-md'>
-        <h2 className='text-3xl font-bold mb-6 text-center text-gray-800'>Verify OTP</h2>
-        <TEInput
-          type='text'
-          label='Enter OTP'
-          size='lg'
-          className='mb-6'
-          value={otp}
-          onChange={(e) => setOtp(e.target.value)}
-        />
-        <TERipple rippleColor='light' className='w-full'>
-          <button
-            type='button'
-            className='inline-block w-full rounded bg-green-600 px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white hover:bg-green-700 transition duration-200'
-            onClick={handleVerify}
-          >
-            Verify
-          </button>
-        </TERipple>
-      </div>
-    </div>
+    <Grid
+      container
+      justifyContent='center'
+      alignItems='center'
+      style={{ minHeight: '100vh', background: 'linear-gradient(to right, #3b82f6, #9333ea)' }}
+    >
+      <Grid item xs={12} sm={8} md={6} lg={4}>
+        <Card>
+          <CardContent>
+            <Typography variant='h5' align='center' gutterBottom>
+              Verify OTP
+            </Typography>
+            <form noValidate>
+              <TextField
+                label='Enter OTP'
+                type='text'
+                fullWidth
+                variant='outlined'
+                margin='normal'
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+              />
+              <Button
+                variant='contained'
+                color='success'
+                fullWidth
+                onClick={handleVerify}
+                style={{ marginTop: '16px' }}
+              >
+                Verify
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </Grid>
+    </Grid>
   );
 };
 

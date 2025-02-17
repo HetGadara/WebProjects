@@ -1,9 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { TEInput, TERipple } from 'tw-elements-react';
+import { Grid, Card, CardContent, TextField, Button, Typography } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
-
-const users = {};
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -12,9 +10,12 @@ const Login = () => {
   const { login } = useAuth();
 
   const handleLogin = useCallback(() => {
+    const users = JSON.parse(localStorage.getItem('users')) || {};
+
+    // Check password matches
     if (users[email] && users[email].password === password) {
       alert('Login Successful');
-      login(users[email]); // Set the authenticated user
+      login(users[email]);
       navigate('/dashboard');
     } else {
       alert('Invalid Credentials');
@@ -22,42 +23,55 @@ const Login = () => {
   }, [email, password, navigate, login]);
 
   return (
-    <div className='flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-500'>
-      <div className='bg-white p-8 rounded-lg shadow-2xl w-full max-w-md'>
-        <h2 className='text-3xl font-bold mb-6 text-center text-gray-800'>Login</h2>
-        <TEInput
-          type='email'
-          label='Email address'
-          size='lg'
-          className='mb-6'
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <TEInput
-          type='password'
-          label='Password'
-          size='lg'
-          className='mb-6'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <TERipple rippleColor='light' className='w-full'>
-          <button
-            type='button'
-            className='inline-block w-full rounded bg-blue-600 px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white hover:bg-blue-700 transition duration-200'
-            onClick={handleLogin}
-          >
-            Login
-          </button>
-        </TERipple>
-        <Link to='/signup' className='block text-center text-blue-600 mt-4 hover:underline'>
-          Don't have an account? Signup
-        </Link>
-        <Link to='/reset-password' className='block text-center text-red-600 mt-4 hover:underline'>
-          Forgot Password? Reset
-        </Link>
-      </div>
-    </div>
+    <Grid
+      container
+      justifyContent='center'
+      alignItems='center'
+      style={{ minHeight: '100vh', background: 'linear-gradient(to right, #3b82f6, #9333ea)' }}
+    >
+      <Grid item xs={12} sm={8} md={6} lg={4}>
+        <Card>
+          <CardContent>
+            <Typography variant='h5' align='center' gutterBottom>
+              Login
+            </Typography>
+            <form noValidate>
+              <TextField
+                label='Email address'
+                type='email'
+                fullWidth
+                variant='outlined'
+                margin='normal'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <TextField
+                label='Password'
+                type='password'
+                fullWidth
+                variant='outlined'
+                margin='normal'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Button variant='contained' color='primary' fullWidth onClick={handleLogin} style={{ marginTop: '16px' }}>
+                Login
+              </Button>
+            </form>
+            <Link to='/signup' style={{ display: 'block', textAlign: 'center', marginTop: '12px' }}>
+              <Typography variant='body2' color='primary'>
+                Don't have an account? Signup
+              </Typography>
+            </Link>
+            <Link to='/reset-password' style={{ display: 'block', textAlign: 'center', marginTop: '12px' }}>
+              <Typography variant='body2' color='error'>
+                Forgot Password? Reset
+              </Typography>
+            </Link>
+          </CardContent>
+        </Card>
+      </Grid>
+    </Grid>
   );
 };
 

@@ -1,29 +1,58 @@
 import React, { useCallback } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { Grid, AppBar, Toolbar, Typography, Button, Container, Card, CardContent } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = useCallback(() => {
     logout();
     localStorage.removeItem('user');
-    window.location.href = '/login';
-  }, [logout]);
+    navigate('/login');
+  }, [logout, navigate]);
+
+  const userData = JSON.parse(localStorage.getItem('user'));
+  const name = userData ? userData.name : 'Guest';
 
   return (
-    <div className='flex flex-col h-screen'>
-      <nav className='bg-blue-600 p-4 flex justify-between items-center shadow-lg'>
-        <h2 className='text-white text-2xl font-bold'>Dashboard</h2>
-        <button
-          className='text-white bg-red-600 px-4 py-2 rounded hover:bg-red-700 transition duration-200'
-          onClick={handleLogout}
+    <div style={{ minHeight: '100vh' }}>
+      {/* Navbar */}
+      <AppBar position='sticky'>
+        <Toolbar>
+          <Typography variant='h6' style={{ flexGrow: 1 }}>
+            Dashboard
+          </Typography>
+          <Button color='inherit' onClick={handleLogout}>
+            Logout
+          </Button>
+        </Toolbar>
+      </AppBar>
+
+      {/* Main Content */}
+      <Container maxWidth='lg' style={{ marginTop: '32px' }}>
+        <Grid
+          container
+          justifyContent='center'
+          alignItems='center'
+          spacing={3}
+          style={{ minHeight: 'calc(100vh - 64px)' }}
         >
-          Logout
-        </button>
-      </nav>
-      <main className='flex-grow flex justify-center items-center bg-gray-100'>
-        <h2 className='text-2xl font-bold text-gray-800'>Welcome to the Dashboard!</h2>
-      </main>
+          <Grid item xs={12} sm={8} md={6} lg={4}>
+            <Card>
+              <CardContent>
+                <Typography variant='h5' align='center' gutterBottom>
+                  Welcome, {name}!
+                </Typography>
+                <Typography variant='body1' align='center'>
+                  You have successfully logged in. Explore the dashboard features.
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </Container>
     </div>
   );
 };

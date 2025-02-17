@@ -9,19 +9,11 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const handleSignup = useCallback(() => {
-    if (!name || !email || !password) {
-      alert('All fields are required');
-      return;
-    }
-
     const otp = Math.floor(1000 + Math.random() * 9000);
-
+    const userData = { name, password, otp };
     const existingUsers = JSON.parse(localStorage.getItem('users')) || {};
-
-    existingUsers[email] = { name, email, password, otp };
-
+    existingUsers[email] = userData;
     localStorage.setItem('users', JSON.stringify(existingUsers));
-
     alert(`OTP sent: ${otp}`);
     navigate('/verify-otp');
   }, [name, email, password, navigate]);

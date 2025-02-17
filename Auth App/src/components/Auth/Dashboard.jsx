@@ -13,8 +13,9 @@ const Dashboard = () => {
     navigate('/login');
   }, [logout, navigate]);
 
-  const userData = JSON.parse(localStorage.getItem('user'));
-  const name = userData ? userData.name : 'Guest';
+  const users = JSON.parse(localStorage.getItem('users')) || {};
+  const userEmail = Object.keys(users).find((email) => users[email].name);
+  const userName = users[userEmail]?.name;
 
   return (
     <div style={{ minHeight: '100vh' }}>
@@ -43,7 +44,7 @@ const Dashboard = () => {
             <Card>
               <CardContent>
                 <Typography variant='h5' align='center' gutterBottom>
-                  Welcome, {name}!
+                  Welcome, {userName}!
                 </Typography>
                 <Typography variant='body1' align='center'>
                   You have successfully logged in. Explore the dashboard features.

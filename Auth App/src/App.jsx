@@ -1,12 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+import Signup from './pages/Signup';
+import VerifyOTP from './pages/VerifyOTP';
+import ResetPassword from './pages/ResetPassword';
+import PrivateRoute from './Auth/PrivateRoute';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import Task from './pages/Task';
 import { AuthProvider } from './context/AuthContext';
-import Signup from './components/Auth/Signup';
-import Login from './components/Auth/Login';
-import VerifyOTP from './components/Auth/VerifyOTP';
-import ResetPassword from './components/Auth/ResetPassword';
-import Dashboard from './components/Auth/Dashboard';
-import PrivateRoute from './components/Auth/PrivateRoute';
 
 const App = () => {
   return (
@@ -23,6 +25,7 @@ const App = () => {
           {/* Protected Routes */}
           <Route element={<PrivateRoute />}>
             <Route path='/dashboard' element={<Dashboard />} />
+            <Route path='task' element={<Task />} />
           </Route>
         </Routes>
       </Router>

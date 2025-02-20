@@ -359,7 +359,7 @@ const FormComponent = () => {
                     </Grid>
 
                     {/* Email */}
-                    <Grid item xs={12}>
+                    <Grid item xs={12} sm={6}>
                       <Typography
                         sx={{
                           fontWeight: '500',
@@ -611,7 +611,6 @@ const FormComponent = () => {
                           </Button>
                         </Grid>
 
-                        {/* Avatar - Align to the start */}
                         {formData.profile && (
                           <Grid item xs={12} sm={6} display='flex' justifyContent='flex-start'>
                             <Avatar
@@ -630,7 +629,6 @@ const FormComponent = () => {
                       </Grid>
                     </Grid>
 
-                    {/* Add Student Button - Align to the end */}
                     <Grid item xs={12} sm={4} display='flex' justifyContent='flex-end'>
                       <Button
                         variant='contained'
@@ -643,7 +641,6 @@ const FormComponent = () => {
                           '&:hover': {
                             backgroundColor: '#1c6f99',
                           },
-                          mt: 2,
                           height: '40px',
                         }}
                         onClick={addRow}

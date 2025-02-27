@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { Grid, AppBar, Toolbar, Typography, Container, Card, CardContent, Box } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { Grid, Typography, Container, Card, CardContent } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import StudentCard from '../components/StudentCard';
+import Navbar from '../components/Navbar';
+import { SidebarContext } from '../components/SidebarContext';
 
 const theme = createTheme({
   palette: {
@@ -27,18 +27,10 @@ const theme = createTheme({
 });
 
 const Dashboard = () => {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = useCallback(() => {
-    logout();
-    localStorage.removeItem('user');
-    navigate('/login');
-  }, [logout, navigate]);
-
   const users = JSON.parse(localStorage.getItem('users')) || {};
   const userEmail = Object.keys(users).find((email) => users[email].name);
   const userName = users[userEmail]?.name;
+  const { sidebarOpen } = useContext(SidebarContext);
 
   const [students, setStudents] = useState([]);
 
@@ -51,60 +43,16 @@ const Dashboard = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <div style={{ minHeight: '90vh', backgroundColor: theme.palette.background.default }}>
-        <AppBar position='fixed' sx={{ width: '100%', zIndex: 1300 }}>
-          <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', padding: '10px' }}>
-              <img
-                src='/static/logo.png'
-                alt='Logo'
-                style={{
-                  width: '150px',
-                  height: 'auto',
-                }}
-              />
-            </Box>
-
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Link to='/task' style={{ textDecoration: 'none' }}>
-                <Typography
-                  variant='h6'
-                  sx={{
-                    color: 'white',
-                    marginRight: 2,
-                    '&:hover': {
-                      color: theme.palette.secondary.main,
-                      cursor: 'pointer',
-                    },
-                  }}
-                >
-                  Add Student Info
-                </Typography>
-              </Link>
-
-              <Typography
-                color='inherit'
-                onClick={handleLogout}
-                variant='h6'
-                sx={{
-                  textTransform: 'none',
-                  padding: 0,
-                  color: 'white',
-                  '&:hover': {
-                    backgroundColor: 'transparent',
-                    color: theme.palette.secondary.main,
-                    cursor: 'pointer',
-                  },
-                }}
-              >
-                Logout
-              </Typography>
-            </Box>
-          </Toolbar>
-        </AppBar>
-
-        {/* Main Content */}
-        <Container maxWidth='lg' sx={{ marginTop: '80px' }}>
+      <div style={{ minHeight: '100vh', backgroundColor: theme.palette.background.default }}>
+        <Navbar />
+        <Container
+          maxWidth='lg'
+          sx={{
+            marginLeft: sidebarOpen ? '500px' : 'auto',
+            paddingLeft: '20px',
+            transition: 'margin-left 0.3s ease',
+          }}
+        >
           <Grid
             container
             justifyContent='center'
@@ -124,6 +72,7 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
             </Grid>
+
             <Grid container spacing={2} justifyContent='center' alignItems='center'>
               {students.map((student) => (
                 <Grid item key={student.id} xs={12} sm={6} md={4} lg={3}>

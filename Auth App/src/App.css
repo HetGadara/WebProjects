@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+@media (min-width: 1200px) {
+  .sidebar-open {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+  }
+}

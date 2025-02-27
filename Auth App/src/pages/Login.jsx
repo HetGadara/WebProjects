@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Grid,
@@ -42,7 +42,14 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, auth } = useAuth();
+
+  // If the user is already logged in, redirect to the dashboard
+  useEffect(() => {
+    if (auth) {
+      navigate('/dashboard');
+    }
+  }, [auth, navigate]);
 
   const handleClickShowPassword = () => setShowPassword((prev) => !prev);
   const handleMouseDownPassword = (event) => event.preventDefault();
@@ -50,7 +57,6 @@ const Login = () => {
   const handleLogin = useCallback(() => {
     const users = JSON.parse(localStorage.getItem('users')) || {};
 
-    // Check password matches
     if (users[email] && users[email].password === password) {
       toast.success('Login Successful');
       login(users[email]);
@@ -61,15 +67,15 @@ const Login = () => {
   }, [email, password, navigate, login]);
 
   const slideInFromTop = keyframes`
-      0% {
-        opacity: 0;
-        transform: translateY(-50px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    `;
+    0% {
+      opacity: 0;
+      transform: translateY(-50px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  `;
 
   return (
     <ThemeProvider theme={theme}>
